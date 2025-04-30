@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chytrý květináč</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Chytrý květináč</h1>
+        <div class="data">
+            <p><strong>Teplota:</strong> <span id="temperature">Načítám...</span> °C</p>
+            <p><strong>Vlhkost vzduchu:</strong> <span id="humidity">Načítám...</span> %</p>
+            <p><strong>Vlhkost půdy:</strong> <span id="soil-moisture">Načítám...</span></p>
+        </div>
+        <form action="/water" method="get">
+            <button type="submit">Zalít rostlinu</button>
+        </form>
+    </div>
+    <div class="footer">
+        <p>© 2025 Chytrý květináč</p>
+    </div>
+
+    <script>
+        // Funkce pro aktualizaci hodnot z Raspberry Pi (tento kód předpokládá, že budete mít API na serveru)
+        function updateData() {
+            fetch('/sensor_data')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperature').textContent = data.temperature;
+                    document.getElementById('humidity').textContent = data.humidity;
+                    document.getElementById('soil-moisture').textContent = data.soil_moisture;
+                })
+                .catch(error => {
+                    console.error('Chyba při získávání dat:', error);
+                });
+        }
+
+        // Periodické aktualizování dat každých 5 sekund
+        setInterval(updateData, 5000);
+        updateData();  // Zavoláme funkci ihned po načtení stránky
+    </script>
+</body>
+</html>
